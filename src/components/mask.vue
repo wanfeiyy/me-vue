@@ -1,27 +1,19 @@
-<template>
-    <div>
-        <header-component/>
-        <div>this is template body</div>
-        <other-component/>
-    </div>
-</template>
 <style>
-    body{
-        background-color:#ff0000;
+    .ui-mask {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 999;
+        background: rgba(0,0,0,.6);
     }
 </style>
+<template>
+    <div id="BP_Mask" class="ui-mask" v-show="mask_show"></div>
+</template>
 <script>
-    import HeaderComponent from './components/header.vue'
-    import OtherComponent from './components/other.vue'
-    export default{
-        data(){
-            return{
-                msg:'hello vue'
-            }
-        },
-        components:{
-            'other-component':OtherComponent,
-            HeaderComponent,
-        }
+    export default {
+        props:['mask_show']
     }
 </script>

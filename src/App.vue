@@ -1,3 +1,4 @@
+<style src="./assets/styles/base.css"></style>
 <style>
   [v-cloak]{
     display: none;
@@ -34,17 +35,25 @@
   }
 </style>
 <template>
-  <div class="main">
-    <router-view  transition-mode="out-in"></router-view>
+  <div class='main'>
+    <icon :show_logo='show_logo'></icon>
+    <router-view class="ui-view" keep-alive :transition="effect"  transition-mode="out-in"></router-view>
   </div>
 </template>
 <script>
+    import Icon from './components/icon.vue'
+
+
     export default {
         data () {
             return {
                 effect: 'fade', //路由模板动画参数
                 routeList: [],     //访问周期中所访问了那些路径,在route.js中设置
+                show_logo: true,
             }
+        },
+        components: {
+          Icon
         }
     }
 
