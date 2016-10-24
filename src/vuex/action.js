@@ -7,4 +7,6 @@ function makeAction(type) {
 }
 export const initStore = makeAction([types.INIT_STORE]);
 export const showLogo = makeAction([types.SHOW_LOGO]);
-
+export const nowDay = makeAction([types.NOW_DAY]);
+export const readyState = makeAction([types.READY_STATE]);
+export const moreButtonState = makeAction([types.MORE_BUTTON_STATE]);

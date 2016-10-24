@@ -1,23 +1,25 @@
 <template>
-    <div class='content'>
+    <div class='content' v-show="getReadyState">
         <slidebar></slidebar>
         <banner :items="topStories"></banner>
+        <daily></daily>
     </div>
 </template>
 <style>
 </style>
 <script>
-    import {getTodayStories,getTopStories} from '../../vuex/getters'
+    import {getTodayStories,getTopStories,getReadyState} from '../../vuex/getters'
     import Banner from '../../components/banner.vue'
     import Slidebar from '../../components/slidebar.vue'
+    import Daily from '../../components/daily.vue'
     export default {
         vuex: {
             getters: {
-                getTodayStories,getTopStories
+                getReadyState,getTodayStories,getTopStories
             }
         },
         components: {
-            Banner,Slidebar
+            Banner,Slidebar,Daily
         },
         computed: {
             topStories: function () {
