@@ -1,9 +1,9 @@
 <template>
     <div class='zhi-list'>
-        <span>{{getNowDay}}</span>
-        <div class="daily-story-block" v-for="item in todayStories">
+        <span>{{date}}</span>
+        <div class="daily-story-block" v-for="item in stories">
             <h4 class="daily-story-title"  v-if ="item.images">{{item.title}}</h4>
-            <h4 class="daily-story-without-title" v-else>{{ item.title }}</h4>
+            <h4 class="daily-story-without-title" v-else>{{item.title }}</h4>
             <div class="daily-story-pic" v-if = "item.images">
                 <img :src="item.images[0]" alt="">
             </div>
@@ -73,25 +73,29 @@
 <script>
     import  '../vuex/store'
     import {moreButtonState} from '../vuex/action'
-    import {getTodayStories,getNowDay,getMoreButtonState} from '../vuex/getters'
-    import More from './more.vue'
+    import {getMoreButtonState} from '../vuex/getters'
+    import More from '../views/home/more.vue'
     export default {
         vuex: {
             getters: {
-                getTodayStories,getNowDay,getMoreButtonState
+                getMoreButtonState
             }
         },
         components: {
            More
         },
-        computed: {
-            todayStories: function () {
-                const todayImage = []
-                this.getTodayStories.forEach( function (entry) {
-                    entry.images[0] = entry.images[0].replace(/http\w{0,1}:\/\/p/g, 'https://images.weserv.nl/?url=p')
-                    todayImage.push(entry)
-                })
-                return todayImage
+        props: {
+            stories: {
+                type: Array,
+                default : function () {
+                    return []
+                }
+            },
+            date: {
+                type: String,
+                default () {
+                    return '今日要闻'
+                }
             }
         }
     }

@@ -28,6 +28,13 @@ export const getMoreButtonState = (state) => {
     return state.index.moreButtonState;
 }
 
+//获取当日以前数据
+export const getBeforeStory = (state) => {
+    return state.index.beforeStory;
+}
 
-
+//获取当前日期
+export const getBeforeDate = (state) => {
+    return state.index.beforeDate;
+}
 

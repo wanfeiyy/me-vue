@@ -10,3 +10,5 @@ export const showLogo = makeAction([types.SHOW_LOGO]);
 export const nowDay = makeAction([types.NOW_DAY]);
 export const readyState = makeAction([types.READY_STATE]);
 export const moreButtonState = makeAction([types.MORE_BUTTON_STATE]);
+export const beforeStory = makeAction([types.BEFORE_STORY]);
+export const beforeDate = makeAction([types.BEFORE_DATE]);

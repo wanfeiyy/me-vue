@@ -9,7 +9,9 @@ const state = {
     topStories: [],
     readyState: false,
     nowDay: '',
-    moreButtonState: true
+    moreButtonState: true,
+    beforeStory: [],
+    beforeDate: '',
 }
 
 const mutations = {
@@ -41,8 +43,22 @@ const mutations = {
     // @data true |false
     [types.MORE_BUTTON_STATE] (state,data) {
        state.moreButtonState = data;
-    }
+    },
 
+    //保存当日以前的数据
+    [types.BEFORE_STORY] (state,data) {
+       state.beforeStory.push(data);
+    },
+
+    //保存loading数据的日期
+    //@data 20161025
+    [types.BEFORE_DATE] (state,data) {
+        var month = data.getMonth() + 1;
+        var day  = data.getDate();
+        month < 10 && (month = '0' + month);
+        day < 10 && (day = '0' + day);
+        state.beforeDate = '/api/4/news/before/'+data.getFullYear()+month.toString()+day.toString()
+    }
 
 }
 
