@@ -7,7 +7,11 @@ module.exports = function (router) {
       '/index': {
           name: 'index',
           component: require('./views/home/index')
-        }
+        },
+      'story/:storyId': {
+          name: 'content',
+          component: require('./views/content/index')
+      }
   })
     // 默认主页
   router.redirect({

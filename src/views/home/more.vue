@@ -1,6 +1,4 @@
 <template>
-    <loading :show="show"></loading>
-    <mask :mask_show="mask_show"></mask>
     <div @click="loadingCiyuanData" class="more-button"> 获取更多次元日报 </div>
 </template>
 <style>
@@ -21,32 +19,20 @@
 </style>
 <script>
     import '../../vuex/store'
-    import {beforeStory,beforeDate} from '../../vuex/action'
+    import {beforeStory,beforeDate,moreButtonState} from '../../vuex/action'
     import {getNowDay,getBeforeDate,getBeforeStory} from '../../vuex/getters'
-    import Loading from '../../components/loading.vue'
-    import Mask from '../../components/mask.vue'
     export default {
-        data () {
-          return {
-              show: false,
-              mask_show: false,
-          }
-        },
         vuex: {
           getters: {
             getNowDay,getBeforeDate,getBeforeStory
           },
           actions: {
-              beforeStory,beforeDate
+              beforeStory,beforeDate,moreButtonState
           }
-        },
-        components: {
-            Loading,Mask
         },
         methods: {
           loadingCiyuanData () {
-              this.show = true
-              this.mask_show = true
+              this.$dispatch('loading_status',true)
               if (!this.getBeforeStory.length) {
                   this.beforeDate(new Date(this.getNowDay))
               }
@@ -56,8 +42,7 @@
                   });
                   response.body.date = response.body.date.slice(0,4)+'-'+response.body.date.slice(4,6)+'-'+response.body.date.slice(6)
                   this.beforeStory(response.body);
-                  this.mask_show = false
-                  this.show = false
+                  this.$dispatch('loading_status',false)
                   this.beforeDate(new Date(response.body.date))
               })
           }

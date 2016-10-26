@@ -1,14 +1,13 @@
 <template>
     <div class='zhi-list'>
         <span>{{date}}</span>
-        <div class="daily-story-block" v-for="item in stories">
+        <div class="daily-story-block" v-for="item in stories" @click="getContent(item.id)">
             <h4 class="daily-story-title"  v-if ="item.images">{{item.title}}</h4>
             <h4 class="daily-story-without-title" v-else>{{item.title }}</h4>
             <div class="daily-story-pic" v-if = "item.images">
                 <img :src="item.images[0]" alt="">
             </div>
         </div>
-        <more v-if="getMoreButtonState"></more>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -72,17 +71,16 @@
 </style>
 <script>
     import  '../vuex/store'
-    import {moreButtonState} from '../vuex/action'
-    import {getMoreButtonState} from '../vuex/getters'
-    import More from '../views/home/more.vue'
     export default {
-        vuex: {
-            getters: {
-                getMoreButtonState
+        data() {
+            return {
+                show: false,
             }
         },
-        components: {
-           More
+        methods: {
+          getContent(id) {
+              this.$router.go('/story/' + id);
+          }
         },
         props: {
             stories: {
@@ -93,8 +91,8 @@
             },
             date: {
                 type: String,
-                default () {
-                    return '今日要闻'
+                default() {
+                    return '次元要闻！'
                 }
             }
         }
