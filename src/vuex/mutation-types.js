@@ -8,3 +8,5 @@ export const NOW_DAY = 'NOW_DAY';
 export const MORE_BUTTON_STATE = 'MORE_BUTTON_STATE';
 export const BEFORE_STORY = 'BEFORE_STORY';
 export const BEFORE_DATE =  'BEFORE_DATE';
+export const ARTICLE_ID = 'ARTICLE_ID';
+export const ARTICLE_READY = 'ARTICLE_READY';

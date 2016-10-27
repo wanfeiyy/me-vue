@@ -10,10 +10,10 @@
     }
 </style>
 <template>
-    <div id="BP_Mask" class="ui-mask" v-show="mask_show"></div>
+    <div id="BP_Mask" v-bind:style="style" class="ui-mask" v-show="mask_show"></div>
 </template>
 <script>
     export default {
-        props:['mask_show']
+        props:['mask_show','style']
     }
 </script>

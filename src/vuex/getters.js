@@ -38,3 +38,10 @@ export const getBeforeDate = (state) => {
     return state.index.beforeDate;
 }
 
+export const getArticleId = (state) => {
+    return state.article.articleId;
+}
+
+export const getArticleReady = (state) => {
+    return state.article.articleReady;
+}

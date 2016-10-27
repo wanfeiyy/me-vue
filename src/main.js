@@ -6,11 +6,11 @@ Vue.use(VueRouter)
 Vue.use(VueResource)
 
 const router = new VueRouter({
-  hashbang: true,
-  history: false,
-  saveScrollPosition: true,
-  transitionOnLoad: true,
-  linkActiveClass: 'nav-active'
+    hashbang: true,
+    history: false,
+    saveScrollPosition: true,
+    transitionOnLoad: true,
+    linkActiveClass: 'nav-active'
 })
 
 require('./router')(router)

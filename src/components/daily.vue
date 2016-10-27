@@ -70,15 +70,22 @@
     }
 </style>
 <script>
-    import  '../vuex/store'
+    import store from '../vuex/store'
+    import {setArticleId} from  '../vuex/action'
     export default {
         data() {
             return {
                 show: false,
             }
         },
+        vuex: {
+          actions: {
+              setArticleId
+          }
+        },
         methods: {
           getContent(id) {
+              this.setArticleId(id)
               this.$router.go('/story/' + id);
           }
         },

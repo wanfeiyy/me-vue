@@ -113,11 +113,11 @@
 </style>
 
 <template>
-    <div id="BP_Loading" class="ui-loading-wrap" v-show="show"><p class="mask"><span></span></p></div>
+    <div id="BP_Loading"  class="ui-loading-wrap" v-show="show"><p v-bind:style="style" class="mask"><span></span></p></div>
 </template>
 
 <script>
     export default {
-        props:['show']
+        props:['show','style']
     }
 </script>

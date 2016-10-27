@@ -12,3 +12,5 @@ export const readyState = makeAction([types.READY_STATE]);
 export const moreButtonState = makeAction([types.MORE_BUTTON_STATE]);
 export const beforeStory = makeAction([types.BEFORE_STORY]);
 export const beforeDate = makeAction([types.BEFORE_DATE]);
+export const setArticleId = makeAction([types.ARTICLE_ID]);
+export const setArticleReady= makeAction([types.ARTICLE_READY]);
