@@ -22,6 +22,7 @@
             </div>
 
         </div>
+        <comment-button :comment=extra></comment-button>
     </div>
 </template>
 <style type="text/css">
@@ -67,6 +68,7 @@
 <script>
     import store from '../../vuex/store'
     import Loading from '../../components/loading.vue'
+    import CommentButton from './CommentButton.vue'
     import Mask from '../../components/mask.vue'
     import {getArticleId} from '../../vuex/getters'
     import {setArticleReady,setArticleId} from  '../../vuex/action'
@@ -95,7 +97,7 @@
           }
         },
         components: {
-          Loading,Mask
+          Loading,Mask,CommentButton
         },
         ready () {
             //初始化1次
@@ -137,8 +139,8 @@
         },
         attached() {
             this.show = true
-            this.content = {}
             this.setArticleReady()
+            this.content = {}
             const source = '/api/4/news/' + this.$route.params.storyId;
             const extraSource = '/api/4/story-extra/' + this.$route.params.storyId;
             this.$http.get(source).then(function (response) {
