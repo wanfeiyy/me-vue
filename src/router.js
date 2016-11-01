@@ -11,6 +11,11 @@ module.exports = function (router) {
       'story/:storyId': {
           name: 'content',
           component: require('./views/content/index')
+      },
+      'comment/:commentId': {
+          name: 'comment',
+          component: require('./views/comment/index.vue')
+
       }
   })
     // 默认主页

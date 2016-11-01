@@ -14,3 +14,5 @@ export const beforeStory = makeAction([types.BEFORE_STORY]);
 export const beforeDate = makeAction([types.BEFORE_DATE]);
 export const setArticleId = makeAction([types.ARTICLE_ID]);
 export const setArticleReady= makeAction([types.ARTICLE_READY]);
+export const setCommentId= makeAction([types.COMMENT_ID]);
+export const setCommentReady =  makeAction([types.COMMENT_READY]);

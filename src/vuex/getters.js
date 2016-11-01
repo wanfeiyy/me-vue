@@ -42,6 +42,11 @@ export const getArticleId = (state) => {
     return state.article.articleId;
 }
 
-export const getArticleReady = (state) => {
-    return state.article.articleReady;
+
+export const getCommentReady = (state) => {
+    return state.comment.commentReady;
+}
+
+export const getCommentId = (state) => {
+    return state.comment.commentId;
 }

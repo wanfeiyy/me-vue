@@ -2,8 +2,10 @@
     <div id="comment-controller">
         <div id="comment-controller-btn-big"
              :class="{'comment-controller-rotate': !hide, 'comment-controller-hide': controllerHide}"
-             ref = "controllerBtn"
-             @click='toggleMenu'>
+             v-el:controller-btn
+             @click='toggleMenu($event)'
+             test="id2"
+        >
             <i class="iconfont icon-jiahao"></i>
         </div>
         <div class="page-controller-memu" :class="{'comment-controller-hide': hide}">
@@ -17,7 +19,7 @@
                 </li>
                 <li>
                     <div class="page-controller-text">评论数：{{comment.comments}}</div>
-                    <div class="page-controller-btn-small" >
+                    <div class="page-controller-btn-small" @click="showComment()">
                         <i class="iconfont icon-comment"></i>
                     </div>
                 </li>
@@ -138,18 +140,21 @@
           }
         },
         methods: {
-           toggleMenu() {
+            toggleMenu(event) {
+               console.log(event);
                this.hide = !this.hide
-           },
-        showBtn(res) {
-            console.log(this)
-            if (window.scrollY >= this.scrollY && this.$refs.className === '') {
-                this.controllerHide = true;
-            } else if (window.scrollY < this.scrollY && this.$refs.controllerBtn.className === "commnet-controller-hide") {
-                this.controllerHide = false;
+            },
+            showBtn() {
+                if (window.scrollY >= this.scrollY && this.$els.controllerBtn.className === '') {
+                    this.controllerHide = true;
+                } else if (window.scrollY < this.scrollY && this.$els.controllerBtn.className === "comment-controller-hide") {
+                    this.controllerHide = false;
+                }
+                this.scrollY = window.scrollY;
+            },
+            showComment() {
+                this.$router.go(this.$route.path.replace(/story/, "comment"))
             }
-            this.scrollY = window.scrollY;
-           }
         },
         attached() {
           window.onscroll = this.showBtn.bind(this);
