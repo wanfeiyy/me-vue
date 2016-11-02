@@ -157,7 +157,9 @@
             }
         },
         attached() {
-          window.onscroll = this.showBtn.bind(this);
+            this.hide = true;
+            this.controllerHide = false;
+            window.onscroll = this.showBtn.bind(this);
         },
         beforeDestroy() {
             window.onscroll = "";

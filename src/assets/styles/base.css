@@ -62,11 +62,11 @@ table {
 }
 
 body {
-  font: 400 20px/1.5 Arial,sans-serif;
-  color: #5e5e5e;
-  background-color: #f6f6f6;
-  overflow-x: hidden;
-  -webkit-text-size-adjust: none
+  /*font: 400 20px/1.5 Arial,sans-serif;*/
+  /*color: #5e5e5e;*/
+  /*background-color: #f6f6f6;*/
+  /*overflow-x: hidden;*/
+  /*-webkit-text-size-adjust: none*/
 }
 
 a {
@@ -134,21 +134,21 @@ input[type=text], input[type=password], input[type=number], input[type=email], i
   content: '\e810';
 }
 
-.ui-app{
-  max-width: 750px;
-  margin: 0 auto;
-}
-.ui-head-bar .icon-uniE810:before, .ui-head-bar .icon-uniE805:before, .ui-head-bar .icon-uniE802:before, .ui-head-bar .icon-uniE80C:before {
-  background-size: 100%;
-  background-position: center;
-  width: .55rem;
-  height: .54rem;
-  display: inline-block;
-  content: " "!important;
-  position: relative!important;
-  left: 0!important;
-  top: 5px;
-}
+/*.ui-app{*/
+  /*max-width: 750px;*/
+  /*margin: 0 auto;*/
+/*}*/
+/*.ui-head-bar .icon-uniE810:before, .ui-head-bar .icon-uniE805:before, .ui-head-bar .icon-uniE802:before, .ui-head-bar .icon-uniE80C:before {*/
+  /*background-size: 100%;*/
+  /*background-position: center;*/
+  /*width: .55rem;*/
+  /*height: .54rem;*/
+  /*display: inline-block;*/
+  /*content: " "!important;*/
+  /*position: relative!important;*/
+  /*left: 0!important;*/
+  /*top: 5px;*/
+/*}*/
 
 
 

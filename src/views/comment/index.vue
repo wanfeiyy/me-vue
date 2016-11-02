@@ -1,13 +1,12 @@
 <template>
     <div id="comments-page">
-        <div class="comments-block">
+        <div class="comments-block" :class="{'short-bg':shortComments===display}">
             <div class="no-long-comment" v-if="!display.length">
                 <div>
                     <i class="iconfont icon-weekend" id="icon-weekend"></i>
                     深度评论虚位以待
                 </div>
             </div>
-            <div class="comment-content-block" v-for="comment in display">
                 <div class="comment-content-block" v-for="comment in display" :key="comment.id">
                     <div class="comment-author-block">
                         <div class="comment-author-avatar">
@@ -21,26 +20,29 @@
                     </div>
                     <div class="comment-content">
                         {{ comment.content }}
-                        <p v-if="comment.reply_to">//
+                        <p v-if="comment.reply_to">@
                             <span>
-            {{ comment.reply_to.author }}
-            </span>
+                        {{ comment.reply_to.author }}
+                             </span>
                             :
-                            {{ comment.reply_to.content }}</p>
+                            {{ comment.reply_to.content }}
+                        </p>
                     </div>
                     <div class="comment-time" v-html="comment.time"></div>
                 </div>
-            </div>
-        </div>
+
         </div>
 
-
-        <div id="comment-controller">
+        <div id="comment-controller"  :class={'comment-controller-hide':ControllerHide}
+             v-el:controller-btn
+        >
             <div class="comment-length">
-                <span >0条长评</span>
+                <span v-if="display === longComments">{{ longComments.length }}条长评</span>
+                <span v-if="display === shortComments">{{ shortComments.length }}条短评</span>
             </div>
             <div class="commit-toggle-btn"
-                 @click="toggleComment()">看短评</div>
+                 @click="toggleComment()">{{ longComments == display ? '看短评':'看长评'}}
+            </div>
         </div>
     </div>
 </template>
@@ -55,6 +57,7 @@
                 longComments: [],
                 shortComments: [],
                 ControllerHide: false,
+                scrollY:0
             }
         },
         vuex: {
@@ -89,6 +92,17 @@
                     entry.time = (date.getMonth() + 1) + "-" + (date.getDate()) +" " + (date.getHours()) + ":" + (date.getMinutes());
                 })
             },
+            toggleComment() {
+                this.display === this.longComments ? this.display = this.shortComments : this.display = this.longComments;
+            },
+            toggleController() {
+                if (window.scrollY >= this.scrollY && this.$els.controllerBtn.className === "") {
+                    this.ControllerHide = true;
+                } else if (window.scrollY < this.scrollY && this.$els.controllerBtn.className === "comment-controller-hide") {
+                    this.ControllerHide = false;
+                };
+                this.scrollY = window.scrollY;
+            }
 
         },
         attached() {
@@ -101,19 +115,27 @@
                 this.fixTime(response.body.comments);
                 this.longComments = response.body.comments;
                 this.display = this.longComments;
+
             });
             this.$http.get(shortCommentSource).then(function (response) {
                 this.fixImageUrl(response.body.comments);
                 this.fixTime(response.body.comments);
                 this.shortComments = response.body.comments;
+
             });
             window.onscroll = this.toggleController.bind(this);
+        },
+        beforeDestroy() {
+            window.onscroll = "";
         },
 
     }
 </script>
 
 <style lang="scss" scoped>
+    .short-bg {
+        background: rgba(255,72,132,.3) !important;
+    }
     #comments-page {
         width: 100%;
         height: 100%;
@@ -130,29 +152,32 @@
         flex-direction: column;
         justify-content: center;
         transition: all 0.3s ease-in-out;
+
     }
 
     .comment-content-block {
         width: 100%;
         background-color: #FFF;
-        margin: 0.5rem 0;
+        /* margin: 0.5rem 0; */
         box-sizing: border-box;
         position: relative;
-        padding: 0 0.5rem;
+        padding: 0 0.2rem;
+        margin-bottom: 0.2rem;
+        font-family: Helvetica Neue,Helvetica,Arial,Sans-serif;
 
         .comment-author-block {
-            height: 2rem;
+            height: 1.6rem;
             width: 100%;
             border-bottom: 1px solid #333;
             position: relative;
 
             .comment-author-avatar {
-                height: 1.5rem;
-                width: 1.5rem;
+                height: 1.1rem;
+                width: 1.1rem;
                 border-radius: 1rem;
-                margin: 0.2rem 0.4rem;
+                margin: 0 0.4rem;
                 position: absolute;
-                top: 0;
+                top: .2rem;
                 left: 0;
 
                 img {
@@ -165,43 +190,39 @@
             }
 
             .comment-author {
-                height: 2rem;
-                line-height: 2rem;
+                height: 1.2rem;
+                line-height: 1.2rem;
                 font-size: 0.5rem;
-                font-weight: bold;
+                font-weight: 700;
                 position: absolute;
-                top: 0;
-                left: 2.5rem;
+                top: 0.2rem;
+                left: 2rem;
             }
 
             .comment-like {
-                width: 2rem;
-                height: 2rem;
-                line-height: 2rem;
+                width: 1.2rem;
+                height: 1rem;
+                line-height: 1.2rem;
                 text-align: left;
                 font-size: 0.5rem;
                 color: #666;
                 position: absolute;
-                top: 0;
+                top: 0.2rem;
                 right: 0.5rem;
-
             }
         }
     }
 
     .comment-content {
-        font-size: 0.8rem;
+        font-size: 0.45rem;
         font-weight: light;
-        padding: 0.2rem 0.8rem;
-        text-align: left;
-        span {
-            color: #0089A7;
-        }
+        padding: 0.2rem 0.5rem;
+        text-align: left
     }
 
     .comment-time {
         text-align: right;
-        font-size: 0.7rem;
+        font-size: 0.45rem;
         color: #999;
         margin-bottom: 0.5rem;
     }
@@ -254,5 +275,11 @@
             top: 0.27rem;
             border-radius: .2rem;
         }
+
+    }
+    .comment-controller-hide {
+        transform: translateY(100%);
+        opacity: 0;
+        transition: all 0.5s ease;
     }
 </style>
