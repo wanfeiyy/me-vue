@@ -15,7 +15,14 @@ module.exports = function (router) {
       'comment/:commentId': {
           name: 'comment',
           component: require('./views/comment/index.vue')
-
+      },
+      '/theme/:themeId': {
+          name: 'theme',
+          component: require('./views/theme/index.vue')
+      },
+      '/about': {
+          name: 'about',
+          component: require('./views/about/index.vue')
       }
   })
     // 默认主页

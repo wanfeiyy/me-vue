@@ -14,24 +14,26 @@
       <div class="sidebar-block" :class="{'sidebar-block-hide': hide}">
          <div class="sidebar-homepage">
             <div class="sidebar-about" @click="toggleSidebar()" v-link="'/about'">
-               <img src="http://tva2.sinaimg.cn/crop.518.65.901.901.180/b2f93831jw8evp8z6co3vj21gx0ts4c2.jpg">
-               <span>gundam1993</span>
+               <img src="../assets/images/common/avatr.jpg">
+               <span>.Yi.</span>
             </div>
-            <div @click="toggleSidebar()" v-link="'/index'">
+            <div class="sidebar-index" @click="toggleSidebar()" v-link="'/index'">
                   <i class="iconfont icon-home"></i>
                   <span>首页</span>
             </div>
          </div>
-      </div>
          <div v-for="topic in topics"
               class="sidebar-topics"
-              @click="toggleSidebar()">
-              v-link="{name: 'theme', params: { themeId: topic.id }}" >
+              @click="toggleSidebar()"
+              v-link = "{name: 'theme', params: { themeId: topic.id }}"
+         >
                <div>
                   {{ topic.name }}
                   <i class="iconfont icon-jiahao"></i>
                </div>
          </div>
+      </div>
+
    </div>
 </template>
 <style lang="scss" scoped>
@@ -77,6 +79,85 @@
       opacity: 0;
       transition: all 0.3s ease-in-out;
    }
+
+   .sidebar-block {
+       position: fixed;
+       top: 0;
+       left: 0;
+       height: 100%;
+       width: 65%;
+       margin: 0;
+       background-color: #fff;
+       z-index: 10000;
+       transition: all 0.3s ease-in-out;
+       overflow: auto;
+       .sidebar-homepage {
+           color: #FFF;
+           width: 100%;
+           box-sizing: border-box;
+           line-height: 2rem;
+           font-size: 1rem;
+           background-color: #FF4B84;
+           opacity: .8;
+           padding: 0.2rem 0 0 0.5rem;
+           .sidebar-about {
+               height: 2rem;
+               width: 100%;
+               line-height: 2rem;
+               img {
+                   height: 1.2rem;
+                   width: 1.2rem;
+                   border-radius: 1rem;
+               }
+               span {
+                   font-size: .6rem;
+                   color: #ffffff;
+                   position: absolute;
+                   top: 0.3rem;
+                   left: 2rem;
+               }
+
+           }
+       }
+       .sidebar-index {
+           height: 1rem;
+           line-height: 1rem;
+           margin-left: .3rem;
+           font-size: .6rem;
+           .iconfont {
+           }
+           span{
+               margin-left: .4rem;
+               font-size: .5rem;
+               vertical-align: top;
+           }
+       }
+       .sidebar-topics {
+           border-bottom: 1px solid #ccc !important;
+           display: block;
+           width: 100%;
+           height: 1.2rem;
+           line-height: 1.2rem;
+           color: #000;
+           padding-left: .78rem;
+           box-sizing: border-box;
+           background-color: #FFF;
+           position: relative;
+           border: none;
+           font-size: 0.5rem;
+
+           a {
+               color: #000;
+           }
+
+           i {
+               position: absolute;
+               right: .4rem;
+               font-size: .6rem;
+           }
+       }
+   }
+
 </style>
 <script>
    export default {
@@ -84,7 +165,26 @@
            return {
                hide : true,
                topics: [],
-         }
-      }
+           }
+       },
+       props: {
+           title: {
+               type: String,
+               default() {
+                   return ''
+               }
+           }
+
+       },
+       methods: {
+           toggleSidebar() {
+               this.hide = !this.hide;
+           }
+       },
+       attached() {
+           this.$http.get("/api/4/themes").then(function (response) {
+               this.topics = response.body.others;
+           });
+       },
    }
 </script>

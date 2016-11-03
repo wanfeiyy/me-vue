@@ -96,7 +96,7 @@
         }
     }
     .comment-controller-hide {
-        transform: translateY(200%);
+        transform: translateY(100%);
         opacity: 0;
         transition: all 0.5s ease;
     }
@@ -141,10 +141,10 @@
         },
         methods: {
             toggleMenu(event) {
-               console.log(event);
                this.hide = !this.hide
             },
             showBtn() {
+                console.log(this.$els.controllerBtn.className === '')
                 if (window.scrollY >= this.scrollY && this.$els.controllerBtn.className === '') {
                     this.controllerHide = true;
                 } else if (window.scrollY < this.scrollY && this.$els.controllerBtn.className === "comment-controller-hide") {
@@ -162,7 +162,8 @@
             window.onscroll = this.showBtn.bind(this);
         },
         beforeDestroy() {
-            window.onscroll = "";
+            window.onscroll = null;
         },
+
     }
 </script>
