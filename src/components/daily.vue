@@ -1,11 +1,11 @@
 <template>
     <div class='zhi-list'>
-        <span>{{date}}</span>
+        <span v-if="date">{{date}}</span>
         <div class="daily-story-block" v-for="item in stories" @click="getContent(item.id)">
             <h4 class="daily-story-title"  v-if ="item.images">{{item.title}}</h4>
             <h4 class="daily-story-without-title" v-else>{{item.title }}</h4>
             <div class="daily-story-pic" v-if = "item.images">
-                <img :src="item.images[0]" alt="">
+                <img :src="item.images[0] |fixed" alt="">
             </div>
         </div>
     </div>
@@ -51,10 +51,11 @@
                 float: left;
                 font-size: .4rem
             }
-            .daily-story-title-without {
+            .daily-story-without-title {
                 display: block;
                 text-align: left;
                 width: 90%;
+                font-size: .4rem
             }
             .daily-story-pic {
                 height: 1.8rem;

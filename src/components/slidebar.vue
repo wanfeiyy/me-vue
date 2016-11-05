@@ -22,7 +22,7 @@
                   <span>首页</span>
             </div>
          </div>
-         <div v-for="topic in topics"
+         <div v-for="topic in getThemes"
               class="sidebar-topics"
               @click="toggleSidebar()"
               v-link = "{name: 'theme', params: { themeId: topic.id }}"
@@ -160,12 +160,17 @@
 
 </style>
 <script>
+   import {getThemes} from  '../vuex/getters'
    export default {
        data() {
            return {
                hide : true,
-               topics: [],
            }
+       },
+       vuex: {
+          getters: {
+             getThemes,
+          }
        },
        props: {
            title: {
@@ -180,11 +185,6 @@
            toggleSidebar() {
                this.hide = !this.hide;
            }
-       },
-       attached() {
-           this.$http.get("/api/4/themes").then(function (response) {
-               this.topics = response.body.others;
-           });
        },
    }
 </script>

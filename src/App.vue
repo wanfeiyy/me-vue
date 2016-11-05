@@ -74,7 +74,7 @@
 <script>
     import Icon from './components/icon.vue'
     import store from './vuex/store'
-    import {initStore,showLogo,nowDay,readyState} from './vuex/action'
+    import {initStore,showLogo,nowDay,readyState,themes} from './vuex/action'
     import {getShowLogo} from  './vuex/getters'
     export default {
       store,
@@ -83,7 +83,8 @@
           initStore,
           showLogo,
           nowDay,
-          readyState
+          readyState,
+          themes
         },
         getters: {
           getShowLogo
@@ -93,15 +94,21 @@
         Icon
       },
       ready () {
-        this.getStory(),
-        this.nowDay()
+        this.setStory(),
+        this.nowDay(),
+        this.setThemes()
       },
       methods: {
-        getStory () {
-          this.$http.get('/api/4/news/latest').then( function (response) {
+        setStory () {
+          this.$http.get('/api/4/news/latest').then(function (response) {
             this.initStore(response)
             this.showLogo(false)
             this.readyState(true)
+          })
+        },
+        setThemes() {
+          this.$http.get("/api/4/themes").then(function (response) {
+            this.themes(response)
           })
         }
       },

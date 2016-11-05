@@ -6,6 +6,7 @@ function makeAction(type) {
     return({ dispatch }, ...args) => dispatch(type, ...args);
 }
 export const initStore = makeAction([types.INIT_STORE]);
+export const themes = makeAction([types.THEMES]);
 export const showLogo = makeAction([types.SHOW_LOGO]);
 export const nowDay = makeAction([types.NOW_DAY]);
 export const readyState = makeAction([types.READY_STATE]);
@@ -16,3 +17,4 @@ export const setArticleId = makeAction([types.ARTICLE_ID]);
 export const setArticleReady= makeAction([types.ARTICLE_READY]);
 export const setCommentId= makeAction([types.COMMENT_ID]);
 export const setCommentReady =  makeAction([types.COMMENT_READY]);
+export const setEditors = makeAction([types.EDITORS]);

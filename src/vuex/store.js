@@ -7,11 +7,12 @@ import VueResource from 'vue-resource';
 import index from './modules/index';
 import article from './modules/article'
 import comment from './modules/comment'
+import themes from  './modules/themes'
 Vue.use(Vuex);
 Vue.use(VueResource)
 
 export default new Vuex.Store({
     modules:{
-        index,article,comment
+        index,article,comment,themes
     }
 })

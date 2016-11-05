@@ -7,6 +7,7 @@ const state = {
     todayStories: [],
     showLogo: true,
     topStories: [],
+    themes:[],
     readyState: false,
     nowDay: '',
     moreButtonState: true,
@@ -20,6 +21,10 @@ const mutations = {
     [types.INIT_STORE] (state,data) {
         state.todayStories = data.body.stories;
         state.topStories = data.body.top_stories;
+    },
+
+    [types.THEMES] (state,data) {
+        state.themes = data.body.others;
     },
     // 初始化当日loading state
     // @data  true | false

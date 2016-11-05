@@ -61,7 +61,31 @@
         }
     }
 
+    .story-recommenders{
+        width: 100%;
+        height: 2.5rem;
+        line-height: 2.5rem;
+        background: rgba(255,75,132,.6);
+        span {
+            font-size: .5rem;
+            margin-left: .5rem;
+            color: #fff;
+        }
+        .story-recommenders-avatar {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            margin-left: .2rem;
+            img {
+                height: 100%;
+                width: 100%;
+                vertical-align: center;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+        }
 
+    }
 
 
 </style>
@@ -112,7 +136,9 @@
                 document.getElementById('article-show').appendChild(link);
             },
             fixImageUrl(content) {
-                content.body = content.body.replace(/src="http\w{0,1}:\/\/p/g, 'src="https://images.weserv.nl/?url=p');
+                if (content.body) {
+                    content.body = content.body.replace(/src="http\w{0,1}:\/\/p/g, 'src="https://images.weserv.nl/?url=p');
+                }
                 if (content.image) {
                     content.image = this.replaceUrl(content.image);
                     console.log(content.image)
@@ -120,9 +146,10 @@
                 if (content.section) {
                     content.section.thumbnail = this.replaceUrl(content.section.thumbnail);
                 };
+                var pro = this.replaceUrl;
                 if (content.recommenders) {
                     content.recommenders.forEach(function (entry) {
-                        entry.avatar = this.replaceUrl(entry.avatar);
+                        entry.avatar = pro(entry.avatar);
                     });
                 }
             },

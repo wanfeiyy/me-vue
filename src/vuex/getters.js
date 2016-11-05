@@ -5,6 +5,11 @@
 export const getTodayStories = (state) => {
     return state.index.todayStories;
 }
+
+export const getThemes = (state) => {
+    return state.index.themes;
+}
+
 // 获取loading的state
 export const getShowLogo = (state)=> {
     return state.index.showLogo;
@@ -49,4 +54,8 @@ export const getCommentReady = (state) => {
 
 export const getCommentId = (state) => {
     return state.comment.commentId;
+}
+
+export const getEditors = (state) => {
+    return state.themes.editors;
 }
