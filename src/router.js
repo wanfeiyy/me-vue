@@ -23,6 +23,10 @@ module.exports = function (router) {
       '/about': {
           name: 'about',
           component: require('./views/about/index.vue')
+      },
+      '/editor': {
+          name: 'editor',
+          component: require('./views/theme/editor.vue')
       }
   })
     // 默认主页

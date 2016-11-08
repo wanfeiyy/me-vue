@@ -6,13 +6,14 @@
                 <h3>{{content.description }}</h3>
                 <span v-if="content.image_source">{{ content.image_source }}</span>
             </div>
-            <div class="theme-editors" v-if="content.editors" v-link="{path:'editors'}">
+            <div class="theme-editors" v-if="content.editors" v-link="'/editor'">
                 <span>主编</span>
                 <div class="theme-editors-avatar"
                      v-for="editor in content.editors">
                     <img :src="editor.avatar | fixed">
                 </div>
             </div>
+
             <daily :stories="content.stories" :date="''"></daily>
         </div>
 </template>
@@ -96,7 +97,8 @@
             return {
                 content:{},
                 image:'',
-                id : 0
+                id : 0,
+                documentThemeHeight:0
             }
         },
         components: {
@@ -109,10 +111,11 @@
             actions: {
                 setEditors,
             }
-
         },
-        attached() {
-            this.initPage()
+        ready() {
+            window.setTimeout(function () {
+                this.documentThemeHeight = document.body.clientHeight;
+            }.bind(this),1000);
         },
         methods: {
             loadOld() {
@@ -120,7 +123,9 @@
                     window.removeEventListener("scroll", this.loadOld)
                     const source = "/api/4/theme/" + this.id + "/before/" + this.content.stories[this.content.stories.length - 1].id;
                     this.$http.get(source).then(function (response) {
-                        this.content.stories.push(entry);
+                        response.body.stories.forEach(function (item) {
+                            this.content.stories.push(item);
+                        }.bind(this))
                         window.addEventListener("scroll", this.loadOld);
                     })
                 }
@@ -130,6 +135,7 @@
                 if (this.id === this.$route.params.themeId) {
                     return;
                 }
+                this.id = this.$route.params.themeId;
                 const source = "/api/4/theme/" + this.$route.params.themeId;
                 this.$http.get(source).then(function (response) {
                     this.content = response.body;
@@ -140,6 +146,7 @@
                         sessionStorage.setItem("editors", newdata);
                     }
                 });
+
                 window.addEventListener("scroll", this.loadOld);
             },
             clearStyle() {
@@ -148,7 +155,15 @@
                     style.remove();
                 }
             },
-
+        },
+        route: {
+            data:function (transition) {
+                this.initPage();
+                window.onscroll = '';
+                scrollTo(0,0);
+                transition.next();
+            }
         }
+
     }
 </script>

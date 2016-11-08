@@ -56,6 +56,11 @@
                 })
                 return topStories
             }
+        },
+        route:{
+            activate() {
+                window.onscroll = '';
+            }
         }
     }
 </script>

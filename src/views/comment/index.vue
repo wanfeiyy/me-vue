@@ -125,9 +125,15 @@
             });
             window.onscroll = this.toggleController.bind(this);
         },
-        beforeDestroy() {
-            window.onscroll = "";
-        },
+//        beforeDestroy() {
+//            window.onscroll = "";
+//        },
+        route:{
+            activate() {
+                window.onscroll = '';
+                this.ControllerHide = false;
+            }
+        }
 
     }
 </script>

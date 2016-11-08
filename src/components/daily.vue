@@ -1,7 +1,7 @@
 <template>
-    <div class='zhi-list'>
+    <div id='zhi-list'>
         <span v-if="date">{{date}}</span>
-        <div class="daily-story-block" v-for="item in stories" @click="getContent(item.id)">
+        <div class="daily-story-block" v-for="(index,item) in stories" @click="getContent(item.id)">
             <h4 class="daily-story-title"  v-if ="item.images">{{item.title}}</h4>
             <h4 class="daily-story-without-title" v-else>{{item.title }}</h4>
             <div class="daily-story-pic" v-if = "item.images">
@@ -11,7 +11,7 @@
     </div>
 </template>
 <style lang="scss" scoped>
-    .zhi-list {
+    #zhi-list {
         width: 100%;
         height: 100%;
         padding-top: 0.6rem;
@@ -77,6 +77,7 @@
         data() {
             return {
                 show: false,
+                documentHeight:0
             }
         },
         vuex: {
@@ -88,7 +89,10 @@
           getContent(id) {
               this.setArticleId(id)
               this.$router.go('/story/' + id);
-          }
+          },
+          getInnerHeight() {
+              console.log(this.$els);
+          },
         },
         props: {
             stories: {
@@ -102,6 +106,12 @@
                 default() {
                     return '次元要闻！'
                 }
+            }
+        },
+        route:{
+            data: function (transition) {
+                transition.next({
+                })
             }
         }
     }
