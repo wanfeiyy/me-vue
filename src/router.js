@@ -27,7 +27,11 @@ module.exports = function (router) {
       '/editor': {
           name: 'editor',
           component: require('./views/theme/editor.vue')
-      }
+      },
+      '/vplayer': {
+          name: 'vplayer',
+          component: require('./views/vplayer/index.vue')
+      },
   })
     // 默认主页
   router.redirect({

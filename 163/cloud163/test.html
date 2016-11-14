@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+ <button @click="test">点击</button>
+</body>
+<script src="./vue.min.js"></script>
+<script src="./vue-resource.min.js"></script>
+<script>
+    new Vue({
+        el: 'body',
+        methods: {
+            test: function () {
+                this.$http.get('/cloud163/index.php',{
+                    'id':232332
+                }).
+                then(function () {
+
+                })
+            }
+        }
+    })
+</script>
+</html>
