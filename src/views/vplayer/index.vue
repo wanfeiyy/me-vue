@@ -1,5 +1,7 @@
 <template>
     <div id="vplayer">
+        <button @click="playMusic('36990266')">点击加载歌曲</button>
+
         <div class="controller  iconfont">
             <div class="info">
                 <img :src="picUrl"/>
@@ -33,6 +35,11 @@
     </div>
 </template>
 <style lang="scss" scoped>
+    button {
+        width: 100%;
+        height: .5rem;
+        text-align: center;
+    }
     @font-face {font-family: "iconplayer";
         src: url('../../assets/font/iconfont.eot?t=1478875830772'); /* IE9*/
         src: url('../../assets/font/iconfont.eot?t=1478875830772#iefix') format('embedded-opentype'), /* IE6-IE8 */
@@ -141,7 +148,8 @@
                 playingArtist: '',
                 picUrl: '',
                 isPlay: false,
-                isNull: false
+                isNull: false,
+                lock : false
             }
         },
         methods: {
@@ -154,9 +162,11 @@
                         'artists': '赵雷',
                     };
                     this.playingLists.push(tmp);
-                    this.storage.setItem('playerList',JSON.stringify(this.playingLists));
+                    this.setLocalPlayList('playerList',this.playingLists);
+                   // this.storage.setItem('playerList',JSON.stringify(this.playingLists));
                 }
-                this.playingLists = JSON.parse(this.storage.getItem('playerList'));
+               // this.playingLists = JSON.parse(this.storage.getItem('playerList'));
+                this.playingLists = this.getLocalPlayList('playerList');
                 // 音量
                 this.audio.volume = .5;
                 this.playingTitle = this.playingLists[0].title;
@@ -182,25 +192,85 @@
                 }
             },
             nextPlay() {
-                var next =  this.getLocalPlayList();
-                this.currentIndex + 1 == next.length ? this.currentIndex = 0 : ++this.currentIndex;
+                var next =  this.getLocalPlayList('playerList');
+                console.log( this.currentIndex + 1 == next.length,this.currentIndex,next.length);
+               // this.currentIndex + 1 == next.length ? this.currentIndex = 0 : this.currentIndex = ++this.currentIndex;
+                if ((this.currentIndex + 1) == next.length) {
+                    this.currentIndex = 0;
+                } else {
+                    this.currentIndex = ++this.currentIndex;
+                }
                 this.getMp3Url(next[this.currentIndex].id);
             },
-            getLocalPlayList () {
-                return JSON.parse(this.storage.getItem('playerList'));
+            getLocalPlayList (key) {
+                return JSON.parse(this.storage.getItem(key));
+            },
+            setLocalPlayList (key,data) {
+                return this.storage.setItem(key,JSON.stringify(data))
             },
             getDetail: function (id) {
                 this.$http.get('cloud163/detail.php?id=' + id).then(function (response) {
                     let detail = response.body.songs[0];
-                    if (detail) {
-
-                        this.playingTitle = detail.al.name;
-                        this.playingArtist = detail.ar[0].name;
-                        this.picUrl = detail.al.picUrl;
-                    } else {
-                        // TODO 以后处理
-                        console.log('暂未获取到详情！');
+                    let id = detail.id;
+                    let title = detail.name
+                    let picUrl = detail.al.picUrl;
+                    var artists;
+                    switch (detail.al.length) {
+                        case 1 :
+                            artists = detail.ar[0].name;
+                            break;
+                        case 2:
+                            artists = detail.ar[0].name + '/' + detail.ar[1].name;
+                            break;
+                        case 3:
+                            artists = detail.ar[0].name + '/' + detail.ar[1].name + '/' + detail.ar[2].name;
+                            break;
                     }
+                    if (!this.isNull) {
+                        this.playingTitle = title;
+                        this.playingArtist = artists;
+                        this.picUrl = picUrl;
+                        let tmpData = {
+                            'id': id,
+                            'title': title,
+                            'artists': artists,
+                            'picUrl': picUrl
+                        }
+                        let localListitem = this.getLocalPlayList('playerList');
+                        this.currentIndex = localListitem.length;
+                        if (localListitem === null) {
+                            this.playingLists.push(localListitem);
+                            this.setLocalPlayList('playerList',localListitem)
+                        } else {
+                            for (var i = 0; i < localListitem.length; i++) {
+                                if (tmpData.id == localListitem[i].id) {
+                                    this.lock = true;
+                                    break;
+                                } else {
+                                    this.lock = false;
+                                }
+                            }
+                        }
+                        if (!this.lock) {
+                            this.playingLists = localListitem;
+                            this.playingLists.push(tmpData);
+                            this.setLocalPlayList('playerList',this.playingLists);
+                        } else {
+                            console.log('该歌曲已存在歌单中');
+                            return false;
+                        }
+
+                    }
+//                    if (detail) {
+//                        this.playingTitle = detail.al.name;
+//                        this.playingArtist = detail.ar[0].name;
+//                        this.picUrl = detail.al.picUrl;
+//                    } else {
+//                        // TODO 以后处理
+//                        console.log('暂未获取到详情！');
+//                    }
+                },function (error) {
+                    console.log(error);
                 })
             },
             getMp3Url(id) {
@@ -218,6 +288,10 @@
                 },function (error) {
                     console.log(error)
                 })
+            },
+            playMusic(id) {
+                console.log(id);
+                this.getMp3Url(id);
             }
         },
 
