@@ -193,7 +193,7 @@
                 this.$http.get('cloud163/detail.php?id=' + id).then(function (response) {
                     let detail = response.body.songs[0];
                     if (detail) {
-                        
+
                         this.playingTitle = detail.al.name;
                         this.playingArtist = detail.ar[0].name;
                         this.picUrl = detail.al.picUrl;
