@@ -101,6 +101,7 @@
                     return []
                 }
             },
+
             date: {
                 type: String,
                 default() {

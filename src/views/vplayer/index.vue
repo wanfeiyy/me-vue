@@ -1,11 +1,10 @@
 <template>
     <div id="vplayer">
-        <button @click="playMusic('193168')">点击加载歌曲</button>
         <div class="controller  iconfont">
             <div class="info">
-                <img :src="picUrl"/>
+                <img :src="picUrl" @click="showLyric"/>
             </div>
-            <div class="artists">
+            <div class="artists" @click="showLyric">
                 <p>{{playingTitle}}</p>
                 <span>{{playingArtist}}</span>
             </div>
@@ -22,15 +21,14 @@
                 <!--<span class="current-time">{{ showCurrentTime }}</span> /-->
                 <!--<span class="duration">{{ showDurationTime }}</span>-->
             <!--</div>-->
-
             <i class="setup"></i>
-
             <!--<div class="volume-panel">-->
                 <!--<i class="volume-toggle" :class="{'is-muted': isMuted}" @click="setMtuted"></i>-->
                 <!--<input v-model="range" @change="setVolume" type="range" min="0" max="1" step=0.1 value="0.5">-->
             <!--</div>-->
-
         </div>
+
+        <lyric :lyric="lyric" :picurl="picUrl" :show="show"></lyric>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -136,6 +134,7 @@
 
 </style>
 <script>
+    import Lyric from './lyric.vue'
     export default {
         data() {
             return {
@@ -143,13 +142,19 @@
                 storage: window.localStorage,
                 currentIndex: 0,
                 playingLists: [],
+                lyricText: '',
+                lyric: [],
                 playingTitle: '',
                 playingArtist: '',
                 picUrl: '',
                 isPlay: false,
                 isNull: false,
-                lock : false
+                lock : false,
+                show: false
             }
+        },
+        components: {
+            Lyric
         },
         methods: {
             firstOrCreate() {
@@ -177,6 +182,9 @@
                 },function (error) {
                     console.log(error);
                 })
+            },
+            showLyric() {
+                this.show = !this.show;
             },
             setPlay() {
                 // audio.pauused表示media暂停状态
@@ -287,9 +295,67 @@
                     console.log(error)
                 })
             },
+            getSongLyric(id) {
+                this.$http.get('cloud163/lyric.php?id='+id
+                ).then(function (data) {
+                    let lyric = data.data;
+                    switch (true) {
+                        case lyric.nolyric === true:
+                            this.lyricText = '纯音乐 无歌词';
+                            this.lyric = [];
+                            break;
+                        case lyric.uncollected === true:
+                            this.lyricText = '未收录歌词';
+                            this.lyric = [];
+                            break;
+                        case !lyric.qfy && !lyric.sfy :
+                            this.lyricText = '';
+                            this.parseLyric(lyric.lrc.lyric);
+                    }
+                },function (error) {
+                    console.log(error);
+                })
+            },
+            parseLyric(text) {
+                // 安行划分
+                let lyric = text.split('\n'),
+                    pattern = /\[(\d{2}):(\d{2})\.(\d{2,3})]/g,
+                    result = [],
+                    offset = this.getOffset(text);
+                while (!pattern.test(lyric[0])) {
+                    lyric = lyric.slice(1);
+                };
+                lyric[lyric.length - 1].length === 0 && lyric.pop();
+                lyric.forEach(function (v,i,a) {
+                    var time = v.match(pattern),
+                        value = v.replace(pattern,"");
+                    time.forEach(function (v1,i1,a1) {
+                        var t = v1.slice(1,-1).split(':');
+                        result.push([parseInt(t[0],10) * 60 +  parseFloat(t[1]) + parseInt(offset) / 1000,value])
+                    })
+                })
+                result.sort(function (a,b) {
+                    return a[0] - b[0];
+                })
+                this.lyric = result; //赋值给data里面的lyric用于做歌词偏移
+                console.log(this.lyric);
+            },
+            getOffset(text) {
+                var offset = 0;
+                try {
+                    var offsetPattern = /\[offset:\-?\+?\d+\]/g,
+                            offset_line = text.match(offsetPattern)[0],
+                            offset_str = offset_line.split(':')[1];
+                    offset = parseInt(offset_str);
+                } catch (err) {
+                    offset = 0;
+                }
+                return offset;
+            },
             playMusic(id) {
                 console.log(id);
                 this.getMp3Url(id,false);
+                this.getSongLyric(id);
             },
             getLocalPlayList (key) {
                 return JSON.parse(this.storage.getItem(key));
@@ -305,7 +371,6 @@
         },
         ready() {
             this.audio.addEventListener('ended',this.autoNextPlay);
-
             this.firstOrCreate();
         },
     }
