@@ -8,11 +8,12 @@ import index from './modules/index';
 import article from './modules/article'
 import comment from './modules/comment'
 import themes from  './modules/themes'
+import vplayer from  './modules/vplayer'
 Vue.use(Vuex);
 Vue.use(VueResource)
 
 export default new Vuex.Store({
     modules:{
-        index,article,comment,themes
+        index,article,comment,themes,vplayer
     }
 })

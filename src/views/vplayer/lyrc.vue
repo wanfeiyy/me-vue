@@ -3,8 +3,8 @@
         <div class="lyric-description"></div>
         <header id="masthead" class="site-header" :style="{ backgroundImage: 'url('+picurl+')' }">
             <div id="lyricWrapper" class="site-branding">
-                <div v-show="lyric.length != 0" id="lyricContainer">
-                    <p id="line-{{$index}}" v-for="lrc in lyric">{{lrc[1]}}</p>
+                <div v-show="list.length != 0" id="lyricContainer">
+                    <p id="line-{{$index}}" v-for="lrc in list">{{lrc[1]}}</p>
                 </div>
             </div>
         </header>
@@ -81,8 +81,6 @@
 </style>
 <script>
     export default{
-        data(){
-        },
         props: {
             show: 'show',
             picurl: {
@@ -91,7 +89,7 @@
                     return '/static/img/playbar_bg.e43522d.png'
                 }
             },
-            lyric: {
+            list: {
                 type: Array,
                 default() {
                     return []

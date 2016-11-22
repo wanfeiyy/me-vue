@@ -59,3 +59,11 @@ export const getCommentId = (state) => {
 export const getEditors = (state) => {
     return state.themes.editors;
 }
+
+export const getLyric = (state) => {
+    return state.vplayer.lyric
+}
+
+export const getpicUrl = (state) => {
+    return state.vplayer.picUrl
+}

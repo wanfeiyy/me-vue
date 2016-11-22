@@ -28,7 +28,7 @@
             <!--</div>-->
         </div>
 
-        <lyric :lyric="lyric" :picurl="picUrl" :show="show"></lyric>
+        <lyrc :list="lyric" :picurl="picUrl" :show="show"></lyrc>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -134,11 +134,14 @@
 
 </style>
 <script>
-    import Lyric from './lyric.vue'
+    import Lyrc from './lyrc.vue'
+    import store from '../../vuex/store'
+    import {setLyric,setPicUrl} from '../../vuex/action'
     export default {
         data() {
             return {
-                audio:document.createElement('audio'),
+                audio: document.createElement('audio'),
+                lyricContainer: document.getElementById('lyricContainer'),
                 storage: window.localStorage,
                 currentIndex: 0,
                 playingLists: [],
@@ -153,8 +156,14 @@
                 show: false
             }
         },
+        store,
+        vuex: {
+            actions: {
+                setPicUrl,setLyric
+            }
+        },
         components: {
-            Lyric
+            Lyrc
         },
         methods: {
             firstOrCreate() {
@@ -167,14 +176,15 @@
                     };
                     this.playingLists.push(tmp);
                     this.setLocalPlayList('playerList',this.playingLists);
-                   // this.storage.setItem('playerList',JSON.stringify(this.playingLists));
                 }
                 this.playingLists = this.getLocalPlayList('playerList');
+                this.getSongLyric(this.playingLists[0].id);
                 // 音量
                 this.audio.volume = .5;
                 this.playingTitle = this.playingLists[0].title;
                 this.playingArtist = this.playingLists[0].artists;
                 this.picUrl = this.playingLists[0].picUrl;
+                this.setPicUrl(this.picUrl);
                 this.$http.get('cloud163/index.php?id='+this.playingLists[0].id
                 ).then(function (response) {
                     var mp3 = response.body.data[0];
@@ -182,11 +192,25 @@
                 },function (error) {
                     console.log(error);
                 })
+
             },
             showLyric() {
                 this.show = !this.show;
             },
+            updateLyric() {
+                if (this.lyric.length === 0 || '') return false;
+                for (var i = 0;i < this.lyric.length;i++) {
+                    if (this.audio.currenTime > this.lyric[i][0] - .5) {
+                        let line  = document.getElementById('line-' + i);
+                        let prevLine = document.getElementById('line-' + (i > 0 ? i - 1 :i));
+                        prevLine.className = '';
+                        line.className = 'current-line';
+                    }
+                }
+            },
             setPlay() {
+
+                this.show = true;
                 // audio.pauused表示media暂停状态
                 if (this.audio.paused) {
                     // media播放
@@ -338,7 +362,8 @@
                     return a[0] - b[0];
                 })
                 this.lyric = result; //赋值给data里面的lyric用于做歌词偏移
-                console.log(this.lyric);
+                return result;
+
             },
             getOffset(text) {
                 var offset = 0;
@@ -355,7 +380,6 @@
             playMusic(id) {
                 console.log(id);
                 this.getMp3Url(id,false);
-                this.getSongLyric(id);
             },
             getLocalPlayList (key) {
                 return JSON.parse(this.storage.getItem(key));
@@ -373,5 +397,15 @@
             this.audio.addEventListener('ended',this.autoNextPlay);
             this.firstOrCreate();
         },
+        route: {
+//            activate() {
+//                this.firstOrCreate();
+//            },
+//            data(transition) {
+//                return {
+//                    lyric : this.getSongLyric(this.getLocalPlayList('playerList')[0]['id'])
+//                }
+//            }
+        }
     }
 </script>

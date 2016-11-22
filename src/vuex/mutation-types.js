@@ -14,3 +14,5 @@ export const ARTICLE_READY = 'ARTICLE_READY';
 export const COMMENT_ID = 'COMMENT_ID';
 export const COMMENT_READY = 'COMMENT_READY';
 export const EDITORS = 'EDITORS';
+export const LYRIC = 'RYRIC';
+export const PICURL = 'PICURL';

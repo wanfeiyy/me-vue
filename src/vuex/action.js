@@ -18,3 +18,5 @@ export const setArticleReady= makeAction([types.ARTICLE_READY]);
 export const setCommentId= makeAction([types.COMMENT_ID]);
 export const setCommentReady =  makeAction([types.COMMENT_READY]);
 export const setEditors = makeAction([types.EDITORS]);
+export const setLyric = makeAction([types.LYRIC]);
+export const setPicUrl = makeAction([types.PICURL]);
