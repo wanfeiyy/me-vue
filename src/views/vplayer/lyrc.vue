@@ -95,6 +95,7 @@
                     return []
                 }
             }
-        }
+        },
+        methods: {}
     }
 </script>

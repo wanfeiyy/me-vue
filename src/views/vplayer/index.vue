@@ -28,7 +28,17 @@
             <!--</div>-->
         </div>
 
-        <lyrc :list="lyric" :picurl="picUrl" :show="show"></lyrc>
+        <div id='lyric' v-show="show">
+            <div class="lyric-description"></div>
+            <header id="masthead" class="site-header" :style="{ backgroundImage: 'url('+picUrl+')' }">
+                <div id="lyricWrapper" class="site-branding">
+                    <div v-show="lyric.length != 0" id="lyricContainer">
+                        <p id="line-{{$index}}" v-for="lrc in lyric">{{lrc[1]}}</p>
+                    </div>
+                </div>
+            </header>
+            <div class="v-control"></div>
+        </div>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -73,6 +83,7 @@
     .shuffle:before { content: "\e624"; }
 
     .controller {
+        z-index: 100;
         background: url(../../assets/images/common/playbar_bg.png) no-repeat;
         background-size: cover;
         position: fixed;
@@ -131,17 +142,86 @@
         }
     }
 
+    .lyric-description {
+        height: .8rem;
+        width: 100%;
+        position: fixed;
+        background: #66ccff;
+        top: 0;
+        left: 0;
+        z-index: 999;
+    }
+    .v-control {
+        height: 2.5rem;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background: #66ccff;
+        z-index: 0;
+    }
+
+    .site-header {
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+        #lyricWrapper {
+            overflow: hidden;
+            position: relative;
+            top: .5rem;
+            color: #fff;
+            #lyricContainer {
+                position: relative;
+                top: 2rem;
+                font-family: Arial, Helvetica, sans-serif;
+                text-shadow: 1px 0 0 #000, -1px 0 0 #000, 0 1px 0 #000, 0 -1px 0 #000;
+                p {
+                    font-size: .4rem;
+                    margin: 1rem auto;
+                    color: #989898;
+                    word-wrap: break-word;
+                    text-align: center;
+                    -webkit-transition: color 0.7s linear;
+                    -moz-transition: color 0.7s linear;
+                    -o-transition: color 0.7s linear;
+                    transition: color 0.7s linear;
+                }
+                .current-line {
+                    color: #fff;
+                    font-size: .4rem;
+                }
+            }
+        }
+        .site-branding {
+            max-width: 100%;
+            padding: 100px 45px;
+            position: relative;
+            text-align: center;
+        }
+
+    }
+
+    .site-header:before {
+        background-color: #000;
+        content: "";
+        opacity: 0.5;
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
 
 </style>
 <script>
-    import Lyrc from './lyrc.vue'
     import store from '../../vuex/store'
     import {setLyric,setPicUrl} from '../../vuex/action'
     export default {
         data() {
             return {
                 audio: document.createElement('audio'),
-                lyricContainer: document.getElementById('lyricContainer'),
+                lyricContainer: '',
                 storage: window.localStorage,
                 currentIndex: 0,
                 playingLists: [],
@@ -163,7 +243,7 @@
             }
         },
         components: {
-            Lyrc
+
         },
         methods: {
             firstOrCreate() {
@@ -199,14 +279,15 @@
             },
             updateLyric() {
                 if (this.lyric.length === 0 || '') return false;
-                for (var i = 0;i < this.lyric.length;i++) {
-                    if (this.audio.currenTime > this.lyric[i][0] - .5) {
-                        let line  = document.getElementById('line-' + i);
-                        let prevLine = document.getElementById('line-' + (i > 0 ? i - 1 :i));
+                for (var i = 0, l = this.lyric.length; i < l; i++) {
+                    if (this.audio.currentTime > this.lyric[i][0] - 0.50) {
+                        var line = document.getElementById('line-' + i),
+                                prevLine = document.getElementById('line-' + (i > 0 ? i - 1 : i));
                         prevLine.className = '';
                         line.className = 'current-line';
-                    }
-                }
+                        this.lyricContainer.style.top = 110 - line.offsetTop + 'px';
+                    };
+                };
             },
             setPlay() {
 
@@ -394,7 +475,9 @@
             }
         },
         ready() {
+            this.lyricContainer = document.getElementById('lyricContainer');
             this.audio.addEventListener('ended',this.autoNextPlay);
+            this.audio.addEventListener('timeupdate', this.updateLyric);
             this.firstOrCreate();
         },
         route: {
