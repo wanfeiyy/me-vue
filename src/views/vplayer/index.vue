@@ -37,7 +37,28 @@
                     </div>
                 </div>
             </header>
-            <div class="v-control"></div>
+            <div class="v-control iconfont">
+                <div class="volume">
+                    <i class="v-volume"></i>
+                </div>
+
+                <div class='v-button'>
+                    <div>
+                        <i class="v-repeat repeat" title="Repeat" @click="setLoop"></i>
+                    </div>
+                    <div>
+                        <ul>
+                            <li><i class="v-previous previous" @click="prevPlay" title="Previous"></i></li>
+                            <li><i class="v-play-pause" @click="setPlay" :class="[ isPlay ? 'pause' : 'play']"></i></li>
+                            <li><i class="v-next next" @click="nextPlay" title="Next"></i></li>
+                        </ul>
+                    </div>
+                    <div>
+
+                         <i class="v-setup setup"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -157,8 +178,27 @@
         position: fixed;
         bottom: 0;
         left: 0;
-        background: #66ccff;
+        background: rgba(0,0,0,.8);
         z-index: 0;
+        .volume {
+            height: 30px;
+            background: red;
+        }
+        .v-button {
+            ul {
+                margin-top: .4rem;
+            }
+            li {
+                margin-left: .2rem;
+                padding: 0 .3rem;
+                display: inline-block;
+            }
+            i {
+
+                opacity: .9;
+                color: snow;
+            }
+        }
     }
 
     .site-header {
