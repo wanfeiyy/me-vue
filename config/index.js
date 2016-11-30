@@ -31,11 +31,11 @@ module.exports = {
             }
         },
       '/cloud163': {
-        target: 'http://127.0.0.1',
+        target: 'http://120.25.195.76',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
-          '^/cloud163': 'cloud163',
+          '^/cloud163': 'music163',
         }
       }
 

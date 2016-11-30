@@ -288,13 +288,25 @@
         methods: {
             firstOrCreate() {
                 if (this.storage.getItem('playerList') == null) {
-                    var tmp = {
-                        'id': '436514312',
-                        'title': '成都',
-                        'picUrl': 'http://p3.music.126.net/34YW1QtKxJ_3YnX9ZzKhzw==/2946691234868155.jpg',
-                        'artists': '赵雷',
-                    };
-                    this.playingLists.push(tmp);
+                    var tmp =   {
+                            'id': '436514312',
+                            'title': '成都',
+                            'picUrl': 'http://p3.music.126.net/34YW1QtKxJ_3YnX9ZzKhzw==/2946691234868155.jpg',
+                            'artists': '赵雷',
+                           },
+                        tmp1 =    {
+                            'id': '36990266',
+                            'title': 'Faded',
+                            'picUrl': 'http://p3.music.126.net/8dzD62VK8jLDbhEqkmpIAg==/18277181788626198.jpg',
+                            'artists': 'Alan Walker',
+                           },
+                        tmp2 =   {
+                            'id': '186016',
+                            'title': '晴天',
+                            'picUrl': 'http://p4.music.126.net/RBNa1MGuuwhLWWC8J_Pyhg==/3242459793609734.jpg',
+                            'artists': '周杰伦',
+                           }
+                    this.playingLists.push(tmp,tmp1,tmp2);
                     this.setLocalPlayList('playerList',this.playingLists);
                 }
                 this.playingLists = this.getLocalPlayList('playerList');
@@ -305,9 +317,9 @@
                 this.playingArtist = this.playingLists[0].artists;
                 this.picUrl = this.playingLists[0].picUrl;
                 this.setPicUrl(this.picUrl);
-                this.$http.get('cloud163/index.php?id='+this.playingLists[0].id
+                this.$http.get('cloud163/index?id='+this.playingLists[0].id
                 ).then(function (response) {
-                    var mp3 = response.body.data[0];
+                    var mp3 = JSON.parse(response.body).data[0];
                     this.audio.src = mp3.url;
                 },function (error) {
                     console.log(error);
@@ -346,6 +358,13 @@
                 var objItem =  this.getLocalPlayList('playerList');
                 this.judgeCurrentIndex(objItem);
                 this.getMp3Url(objItem[this.currentIndex].id);
+                this.getSongLyric(objItem[this.currentIndex].id);
+            },
+            prevPlay() {
+                var objItem = this.getLocalPlayList('playerList');
+                this.judgeCurrentIndex(objItem,'prev');
+                this.getMp3Url(objItem[this.currentIndex].id);
+                this.getSongLyric(objItem[this.currentIndex].id);
             },
             autoNextPlay() {
                 console.log('autoPlay is running...!')
@@ -356,8 +375,8 @@
                 }
             },
             getDetail: function (id,is_detail=true) {
-                this.$http.get('cloud163/detail.php?id=' + id).then(function (response) {
-                    let detail = response.body.songs[0];
+                this.$http.get('cloud163/detail?id=' + id).then(function (response) {
+                    let detail = JSON.parse(response.body).songs[0];
                     let id = detail.id;
                     let title = detail.name
                     let picUrl = detail.al.picUrl;
@@ -397,6 +416,7 @@
                 },function (error) {
                     console.log(error);
                 })
+
             },
             addMusci(data) {
                 let tmpData = data;
@@ -425,8 +445,8 @@
                 }
             },
             getMp3Url(id,is_detail = true) {
-                this.$http.get('cloud163/index.php?id='+id).then(function (response) {
-                    var mp3 = response.body.data[0];
+                this.$http.get('cloud163/index?id='+id).then(function (response) {
+                    var mp3 = JSON.parse(response.body).data[0];
                     if (mp3.code === 404) {
                         alert('无法播放，歌曲被“和谐”了');
                         this.isNull = true;
@@ -441,9 +461,9 @@
                 })
             },
             getSongLyric(id) {
-                this.$http.get('cloud163/lyric.php?id='+id
+                this.$http.get('cloud163/lyric?id='+id
                 ).then(function (data) {
-                    let lyric = data.data;
+                    let lyric = JSON.parse(data.data);
                     switch (true) {
                         case lyric.nolyric === true:
                             this.lyricText = '纯音乐 无歌词';
@@ -508,10 +528,11 @@
             setLocalPlayList (key,data) {
                 return this.storage.setItem(key,JSON.stringify(data))
             },
-            judgeCurrentIndex(objItem) {
-                console.log( this.currentIndex + 1 == objItem.length,this.currentIndex,objItem.length);
+            judgeCurrentIndex(objItem,direction = 'next') {
+                //console.log( this.currentIndex + 1 == objItem.length,this.currentIndex,objItem.length);
                 // this.currentIndex + 1 == next.length ? this.currentIndex = 0 : this.currentIndex = ++this.currentIndex;
-                this.currentIndex + 1 == objItem.length ? this.currentIndex = 0 : this.currentIndex += 1;
+                ((direction == "next" ? this.currentIndex + 1 : this.currentIndex - 1) == objItem.length) ? this.currentIndex = 0 : direction == 'next' ? this.currentIndex += 1 : this.currentIndex -= 1;
+                console.log(this.currentIndex);
             }
         },
         ready() {
