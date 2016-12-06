@@ -44,19 +44,14 @@
                     <i class="v-volume"></i>
                 </div>
 
-                <div class='v-button'>
-                    <div class="v-button-left">
+                <div class='v-button clearfix'>
+                    <div class="v-button-common v-button-left">
                         <i class="v-repeat repeat" title="Repeat" @click="setLoop"></i>
                     </div>
-                    <div class="v-button-center">
-                        <ul>
-                            <li><i class="v-previous previous" @click="prevPlay" title="Previous"></i></li>
-                            <li><i class="v-play-pause" @click="setPlay" :class="[ isPlay ? 'pause' : 'play']"></i></li>
-                            <li><i class="v-next next" @click="nextPlay" title="Next"></i></li>
-                        </ul>
-                    </div>
-                    <div class="v-button-right">
-
+                    <div class="v-button-common v-button-lf"><i class="v-previous previous" @click="prevPlay" title="Previous"></i></div>
+                    <div class="v-button-common v-button-play"><i class="v-play-pause" @click="setPlay" :class="[ isPlay ? 'pause' : 'play']"></i></div>
+                    <div class="v-button-common v-button-lf"><i class="v-next next" @click="nextPlay" title="Next"></i></div>
+                    <div class="v-button-common v-button-right">
                          <i class="v-setup setup"></i>
                     </div>
                 </div>
@@ -195,34 +190,46 @@
             background: red;
         }
         .v-button {
-            ul {
-                margin-top: .4rem;
+            background: #000;
+            height: 1.9rem;
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            line-height: 1.9rem;
+
+            .v-button-common {
+                float: left;
+                width: 21%;
+                text-align: center;
             }
-            li {
-                margin-left: .2rem;
-                padding: 0 .3rem;
+            .v-button-left{
+                font-size: 0.7rem;
+            }
+            .v-button-lf i {
                 display: inline-block;
+                font-size: .4rem;
+                width: .8rem;
+                height: .8rem;
+                border-radius: 50%;
+                background: rgba(255, 0, 0, 0.8);
+                line-height: 0.8rem;
+                vertical-align: text-bottom;
             }
+            .v-button-play {
+                font-size: 1.1rem;
+                line-height: 2.0rem;
+                width: 15%;
+            }
+            .v-button-right{
+                font-size: 0.7rem;
+            }
+            
             i {
 
                 opacity: .9;
                 color: snow;
             }
-            .v-button-left{
-                display: inline-block;
-                width: 15%;
-                text-align: center;
-            }
-            .v-button-center{
-                display: inline-block;
-                width: 61%;
-                text-align: center;
-            }
-            .v-button-right{
-                display: inline-block;
-                width: 15%;
-                text-align: center;
-            }
+            
         }
     }
 
