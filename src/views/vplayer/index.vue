@@ -1,5 +1,5 @@
 <template>
-    <div id="vplayer">
+    <div id="vplayer" :style="{ backgroundImage: 'url('+picUrl+')' }">
         <div class="controller  iconfont">
             <div class="info">
                 <img :src="picUrl" @click="showLyric"/>
@@ -28,9 +28,11 @@
             <!--</div>-->
         </div>
 
-        <div id='lyric' v-show="show">
+        
+    </div>
+    <div id='lyric' v-show="show" >
             <div class="lyric-description"></div>
-            <header id="masthead" class="site-header" :style="{ backgroundImage: 'url('+picUrl+')' }">
+            <header id="masthead" class="site-header">
                 <div id="lyricWrapper" class="site-branding">
                     <div v-show="lyric.length != 0" id="lyricContainer">
                         <p id="line-{{$index}}" v-for="lrc in lyric">{{lrc[1]}}</p>
@@ -43,26 +45,34 @@
                 </div>
 
                 <div class='v-button'>
-                    <div>
+                    <div class="v-button-left">
                         <i class="v-repeat repeat" title="Repeat" @click="setLoop"></i>
                     </div>
-                    <div>
+                    <div class="v-button-center">
                         <ul>
                             <li><i class="v-previous previous" @click="prevPlay" title="Previous"></i></li>
                             <li><i class="v-play-pause" @click="setPlay" :class="[ isPlay ? 'pause' : 'play']"></i></li>
                             <li><i class="v-next next" @click="nextPlay" title="Next"></i></li>
                         </ul>
                     </div>
-                    <div>
+                    <div class="v-button-right">
 
                          <i class="v-setup setup"></i>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </template>
 <style lang="scss" scoped>
+    #vplayer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        //filter: blur(30px);
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
     button {
         width: 100%;
         height: .5rem;
@@ -198,6 +208,21 @@
                 opacity: .9;
                 color: snow;
             }
+            .v-button-left{
+                display: inline-block;
+                width: 15%;
+                text-align: center;
+            }
+            .v-button-center{
+                display: inline-block;
+                width: 61%;
+                text-align: center;
+            }
+            .v-button-right{
+                display: inline-block;
+                width: 15%;
+                text-align: center;
+            }
         }
     }
 
@@ -210,6 +235,7 @@
             position: relative;
             top: .5rem;
             color: #fff;
+            overflow: auto;
             #lyricContainer {
                 position: relative;
                 top: 2rem;
@@ -286,27 +312,16 @@
 
         },
         methods: {
+
             firstOrCreate() {
                 if (this.storage.getItem('playerList') == null) {
-                    var tmp =   {
-                            'id': '436514312',
-                            'title': '成都',
-                            'picUrl': 'http://p3.music.126.net/34YW1QtKxJ_3YnX9ZzKhzw==/2946691234868155.jpg',
-                            'artists': '赵雷',
-                           },
-                        tmp1 =    {
-                            'id': '36990266',
-                            'title': 'Faded',
-                            'picUrl': 'http://p3.music.126.net/8dzD62VK8jLDbhEqkmpIAg==/18277181788626198.jpg',
-                            'artists': 'Alan Walker',
-                           },
-                        tmp2 =   {
-                            'id': '186016',
-                            'title': '晴天',
-                            'picUrl': 'http://p4.music.126.net/RBNa1MGuuwhLWWC8J_Pyhg==/3242459793609734.jpg',
-                            'artists': '周杰伦',
-                           }
-                    this.playingLists.push(tmp,tmp1,tmp2);
+                    var tmp = {
+                        'id': '436514312',
+                        'title': '成都',
+                        'picUrl': 'http://p3.music.126.net/34YW1QtKxJ_3YnX9ZzKhzw==/2946691234868155.jpg',
+                        'artists': '赵雷',
+                    };
+                    this.playingLists.push(tmp);
                     this.setLocalPlayList('playerList',this.playingLists);
                 }
                 this.playingLists = this.getLocalPlayList('playerList');
@@ -319,7 +334,9 @@
                 this.setPicUrl(this.picUrl);
                 this.$http.get('cloud163/index?id='+this.playingLists[0].id
                 ).then(function (response) {
-                    var mp3 = JSON.parse(response.body).data[0];
+                    var s = JSON.parse(response.body)
+                    console.log(s)
+                    var mp3 = s.data[0];
                     this.audio.src = mp3.url;
                 },function (error) {
                     console.log(error);
@@ -328,6 +345,7 @@
             },
             showLyric() {
                 this.show = !this.show;
+                this.getWindowHeight('vplayer');
             },
             updateLyric() {
                 if (this.lyric.length === 0 || '') return false;
@@ -335,6 +353,7 @@
                     if (this.audio.currentTime > this.lyric[i][0] - 0.50) {
                         var line = document.getElementById('line-' + i),
                                 prevLine = document.getElementById('line-' + (i > 0 ? i - 1 : i));
+                                //console.log(prevLine)
                         prevLine.className = '';
                         line.className = 'current-line';
                         this.lyricContainer.style.top = 110 - line.offsetTop + 'px';
@@ -343,7 +362,7 @@
             },
             setPlay() {
 
-                this.show = true;
+                //this.show = true;
                 // audio.pauused表示media暂停状态
                 if (this.audio.paused) {
                     // media播放
@@ -376,7 +395,7 @@
             },
             getDetail: function (id,is_detail=true) {
                 this.$http.get('cloud163/detail?id=' + id).then(function (response) {
-                    let detail = JSON.parse(response.body).songs[0];
+                    let detail = response.body.songs[0];
                     let id = detail.id;
                     let title = detail.name
                     let picUrl = detail.al.picUrl;
@@ -416,7 +435,6 @@
                 },function (error) {
                     console.log(error);
                 })
-
             },
             addMusci(data) {
                 let tmpData = data;
@@ -528,11 +546,17 @@
             setLocalPlayList (key,data) {
                 return this.storage.setItem(key,JSON.stringify(data))
             },
-            judgeCurrentIndex(objItem,direction = 'next') {
-                //console.log( this.currentIndex + 1 == objItem.length,this.currentIndex,objItem.length);
+            judgeCurrentIndex(objItem) {
+                console.log( this.currentIndex + 1 == objItem.length,this.currentIndex,objItem.length);
                 // this.currentIndex + 1 == next.length ? this.currentIndex = 0 : this.currentIndex = ++this.currentIndex;
-                ((direction == "next" ? this.currentIndex + 1 : this.currentIndex - 1) == objItem.length) ? this.currentIndex = 0 : direction == 'next' ? this.currentIndex += 1 : this.currentIndex -= 1;
-                console.log(this.currentIndex);
+                this.currentIndex + 1 == objItem.length ? this.currentIndex = 0 : this.currentIndex += 1;
+            },
+            getWindowHeight(ele){
+                var w_height = window.screen.availHeight;
+                document.getElementById(ele).style.height = w_height + 'px';
+                if(ele == 'vplayer'){
+                    document.getElementById(ele).style.filter = 'blur(30px)';
+                }
             }
         },
         ready() {
@@ -540,6 +564,7 @@
             this.audio.addEventListener('ended',this.autoNextPlay);
             this.audio.addEventListener('timeupdate', this.updateLyric);
             this.firstOrCreate();
+            this.getWindowHeight('lyricWrapper');
         },
         route: {
 //            activate() {
