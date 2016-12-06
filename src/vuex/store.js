@@ -5,11 +5,15 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VueResource from 'vue-resource';
 import index from './modules/index';
+import article from './modules/article'
+import comment from './modules/comment'
+import themes from  './modules/themes'
+import vplayer from  './modules/vplayer'
 Vue.use(Vuex);
 Vue.use(VueResource)
 
 export default new Vuex.Store({
     modules:{
-        index
+        index,article,comment,themes,vplayer
     }
 })

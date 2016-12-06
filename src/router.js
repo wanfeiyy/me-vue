@@ -7,7 +7,31 @@ module.exports = function (router) {
       '/index': {
           name: 'index',
           component: require('./views/home/index')
-        }
+        },
+      'story/:storyId': {
+          name: 'content',
+          component: require('./views/content/index')
+      },
+      'comment/:commentId': {
+          name: 'comment',
+          component: require('./views/comment/index.vue')
+      },
+      '/theme/:themeId': {
+          name: 'theme',
+          component: require('./views/theme/index.vue')
+      },
+      '/about': {
+          name: 'about',
+          component: require('./views/about/index.vue')
+      },
+      '/editor': {
+          name: 'editor',
+          component: require('./views/theme/editor.vue')
+      },
+      '/vplayer': {
+          name: 'vplayer',
+          component: require('./views/vplayer/index.vue')
+      },
   })
     // 默认主页
   router.redirect({

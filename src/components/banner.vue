@@ -4,7 +4,6 @@
                 <img :src="topItem.image">
             </swipe-item>
         </swipe>
-
 </template>
 
 <style>
@@ -16,7 +15,7 @@
     }
     .my-swipe{
         margin-top: 0.989rem;
-        height: 4.5rem !important;
+        height: 7.5rem !important;
         color: #fff;
         font-size: 30px;
         text-align: center;
